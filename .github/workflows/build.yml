@@ -1,0 +1,49 @@
+name: Build Voice Plugin
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y g++ cmake make
+
+      - name: Build plugin (.so)
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          make
+          ls -l
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: voice_samp_linux
+          path: build/*.so
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build plugin (.dll)
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build . --config Release
+          dir
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: voice_samp_windows
+          path: build/Release/*.dll
