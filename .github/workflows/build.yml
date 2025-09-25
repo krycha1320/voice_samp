@@ -1,0 +1,31 @@
+name: Build voice_samp.so
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install 32-bit build tools
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get install -y g++-multilib
+
+    - name: Build .so plugin
+      run: |
+        g++ -m32 -std=c++17 -O2 -fPIC -shared voice_samp.cpp -o voice_samp.so
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: voice_samp-linux
+        path: voice_samp.so
