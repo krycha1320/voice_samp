@@ -1,15 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(voice_samp)
 
-set(CMAKE_CXX_STANDARD 11)
-
-# Wymuszenie budowania w 32-bit
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -m32")
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(voice_samp SHARED voice_samp.cpp)
 
-if (UNIX)
-    target_link_libraries(voice_samp pthread dl)
-endif()
+# wymuszenie 32-bit
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -O2 -fPIC")
