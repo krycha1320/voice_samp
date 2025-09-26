@@ -1,0 +1,31 @@
+name: Build voice_samp.so
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install deps (gcc-multilib, cmake)
+        run: sudo apt-get update && sudo apt-get install -y g++-multilib cmake make
+
+      - name: Build plugin (.so 32-bit)
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          make
+          ls -l
+
+      - name: Upload .so artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: voice_samp_linux
+          path: build/*.so
